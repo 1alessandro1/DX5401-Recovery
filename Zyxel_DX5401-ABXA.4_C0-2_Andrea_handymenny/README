@@ -1,0 +1,26 @@
+Firmware ABXA.4 C0 per DX5401-B0 Wind Rev2
+
+Questo firmware si basa sull'ABYO.4 C0, che contiene fix per le ultimissime CVE e dei workaround per gli errori di scrittura sulla NAND.
+
+Modifiche effettuate rispetto all'ABYO.4 C0 ufficiale:
+- Sostituiti model id e firmware id con quelli del modem fornito da Wind.
+- Sostituito bootloader con quello del firmware ABXA.1 b5.
+- Patchato il driver "zyxel detect by gpio" per riconoscere il DX5401-B0 Wind.
+- Aggiunto uno script che ad ogni avvio imposta la password di root/supervisor pari al seriale del modem.
+
+Nella variante "W3-Config" la config Zyxel di default è stata così modificata:
+- La sezione broadband, QoS e VoIP sono configurate come nei firmware W3.
+- Il TR-069 (telegestione) è attivo di default con i parametri W3.
+- SSID e Password del wifi sono le stesse del firmware W3.
+
+Di contro nella variante "Zyxel-Config" queste config sono diverse da quelle del firmware W3.
+
+
+Note:
+- Per il corretto funzionamento di questo firmware è necessario un reset alle impostazioni di fabbrica.
+  Sui modem con la "NAND corrotta" può essere difficile effettuare un reset (può richiedere molti tentativi).
+  In caso non si riesca ad effettuare il reset, l'unica strada per recuperare il modem è caricare un firmware W3 via seriale. 
+- Il firmware può essere caricato direttamente dalla web ui del firmware W3, ricordarsi di spuntare l'opzione ripristino impostazioni di fabbrica.
+- Non ripristinare backup fatti con firmware W3 ufficiali, potrebbero mandare in bootloop il modem.
+- La password di root/supervisor viene sostituita con quella di fabbrica se si modifica la sezione utenti del modem (aggiungendo account, eliminando account, cambiando pw etc..).
+  Può essere utile quindi conservare la password di fabbrica, la si dovrebbe recuperare con questo commando: "dd if=/dev/mtd6 ibs=1 skip=67698 count=10 2> /dev/null && echo ' '" (da eseguire in una shell root sullo zyxel).
